@@ -2,17 +2,19 @@ project:
   type: website
 
 website:
-  title: "John Michael Epperson's Data Science Hub"
+  title: "Michael's DS Hub"
   navbar:
     left:
       - href: index.qmd
         text: Home
       - about.qmd
+      - href: cville_rag.qmd
+        text: Charlottesville RAG Assistant
 
 format:
   html:
     theme:
-      - cosmo
+      - slate
       - brand
     css: styles.css
     toc: true

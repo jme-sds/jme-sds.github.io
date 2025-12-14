@@ -1,0 +1,13 @@
+## Charlottesville Law Assistant
+
+This assistant uses Retrieval Augmented Generation to answer questions about anything concerning city ordinance in Charlottesville, VA. It uses Qwen3-Embedding0.6B for retrieval and Qwen2.5-8B-Instruct for generation.
+
+```{=html}
+<iframe
+  src="[https://huggingface.co/spaces/jme-datasci/cville-assistant](https://huggingface.co/spaces/jme-datasci/cville-assistant)"
+  width="100%"
+  height="600px"
+  frameborder="0"
+></iframe>
+
+**Disclaimer**: AI makes mistakes, check important information. This is not a substitute for legal advice.
