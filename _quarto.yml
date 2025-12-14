@@ -16,7 +16,6 @@ format:
     theme:
       - light: cosmo
       - dark: darkly
-      - brand
     css: styles.css
     toc: true
 
