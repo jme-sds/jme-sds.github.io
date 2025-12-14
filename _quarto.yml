@@ -14,7 +14,8 @@ website:
 format:
   html:
     theme:
-      - slate
+      - light: cosmo
+      - dark: darkly
       - brand
     css: styles.css
     toc: true
