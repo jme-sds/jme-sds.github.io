@@ -6,7 +6,7 @@ This assistant uses Retrieval Augmented Generation to answer questions about any
 <iframe
 	src="https://jme-datasci-cville-assistant.hf.space"
 	frameborder="0"
-	style="width: 100%; height: 70vh; min-height: 500px; border-radius: 8px;"
+	style="width: 100%; height: 75vh; min-height: 500px; border-radius: 8px;"
 ></iframe>
 
 
