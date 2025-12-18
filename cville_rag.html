@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -285,7 +320,21 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#charlottesville-law-assistant" id="toc-charlottesville-law-assistant" class="nav-link active" data-scroll-target="#charlottesville-law-assistant">Charlottesville Law Assistant</a></li>
+  <li><a href="#charlottesville-law-assistant" id="toc-charlottesville-law-assistant" class="nav-link active" data-scroll-target="#charlottesville-law-assistant">Charlottesville Law Assistant</a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  </ul></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">1. Introduction</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">2. Data</a></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">3. Methodology</a></li>
+  <li><a href="#evaluation" id="toc-evaluation" class="nav-link" data-scroll-target="#evaluation">4. Evaluation</a>
+  <ul class="collapse">
+  <li><a href="#benchmark-results" id="toc-benchmark-results" class="nav-link" data-scroll-target="#benchmark-results">Benchmark Results</a></li>
+  </ul></li>
+  <li><a href="#usage-and-intended-uses" id="toc-usage-and-intended-uses" class="nav-link" data-scroll-target="#usage-and-intended-uses">5. Usage and Intended Uses</a></li>
+  <li><a href="#prompt-format" id="toc-prompt-format" class="nav-link" data-scroll-target="#prompt-format">Prompt Format</a></li>
+  <li><a href="#expected-output-format" id="toc-expected-output-format" class="nav-link" data-scroll-target="#expected-output-format">Expected Output Format</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
   </ul>
 </nav>
     </div>
@@ -298,10 +347,320 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="charlottesville-law-assistant" class="level2">
 <h2 class="anchored" data-anchor-id="charlottesville-law-assistant">Charlottesville Law Assistant</h2>
-<p>This assistant uses Retrieval Augmented Generation to answer questions about anything concerning city ordinance in Charlottesville, VA. It uses Qwen3-Embedding0.6B for retrieval and Qwen2.5-8B-Instruct for generation.</p>
-<iframe src="https://jme-datasci-cville-assistant.hf.space" frameborder="0" style="width: 100%; height: 75vh; min-height: 500px; border-radius: 8px;">
+<section id="overview" class="level3">
+<h3 class="anchored" data-anchor-id="overview">Overview</h3>
+<p>This assistant uses Retrieval Augmented Generation to answer questions about anything concerning city ordinance in Charlottesville, VA. It uses Qwen3-Embedding-0.6B for retrieval and Qwen2.5-7B-Instruct for generation.</p>
+<p>Try it out! This app runs on <a href="https://huggingface.co/docs/hub/en/spaces-zerogpu">HuggingFace’s ZeroGPU</a>.</p>
+<iframe src="https://jme-datasci-cville-assistant-embed.hf.space" frameborder="0" style="width: 100%; height: 75vh; min-height: 500px; border-radius: 8px;">
 </iframe>
 <p><strong>Disclaimer</strong>: AI makes mistakes, check important information. This is not a substitute for legal advice.</p>
+</section>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">1. Introduction</h2>
+<p>Local laws are often written in dense legal terminology that the average person struggles to interpret, turning simple questions about parking or zoning into a maze of irrelevant sections and complex jargon. While current Large Language Models (LLMs) like ChatGPT have seen municipal codes, they are trained on codes from across the country, leading to generalized answers that may blend details from different jurisdictions and hallucinate non-existent regulations. To solve this, I developed the <strong>Charlottesville Local Ordinance Assistant</strong>, a system designed specifically to answer questions about Charlottesville, VA municipal code in plain English. This project utilizes a Retrieval-Augmented Generation (RAG) pipeline to ensure legal accuracy by retrieving up-to-date ordinances, coupled with a specific system prompt designed to translate that “legalese” into clear, accessible language without the need for computationally expensive fine-tuning. The results demonstrate that constraining the model to local data and utilizing strong prompt engineering significantly reduces hallucinations compared to off-the-shelf generalist models.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">2. Data</h2>
+<p>For the RAG pipeline, the knowledge base consists of the unedited Charlottesville Municipal Code text, scraped and pre-processed from <a href="https://library.municode.com/va/charlottesville/codes/code_of_ordinances">Municode</a>. These chunks were not rephrased, ensuring that the retrieval mechanism pulls the exact letter of the law. To evaluate the RAG pipeline, I utilized a set of questions and answers generated from the original sections of the municipal code to validate retrieval accuracy (checking if the retrieved node matched the ground truth node for a given query). This dataset can be found at <a href="https://huggingface.co/datasets/jme-datasci/charlottesville_qa/tree/main">jme-datasci/charlottesville_qa</a>.</p>
+</section>
+<section id="methodology" class="level2">
+<h2 class="anchored" data-anchor-id="methodology">3. Methodology</h2>
+<p>For the RAG methodology, I implemented a dense retrieval system. I selected <strong>Qwen3-Embedding-0.6B</strong> as the embedding model due to the relatively small size of the RAG corpus (municipal code). This model allows for high-precision retrieval without the latency of larger embedding models. The retrieved context is passed to the <strong>Qwen2.5-7B-Instruct</strong> generator to synthesize the final answer.</p>
+<p>The generation model uses a maximum token count of 500 for responses where more explanation may be required and a temperature of 0.9 to encourage more factual responses. The embedding model is set to retreive 3 documents from the FAISS index using cosine similarity.</p>
+</section>
+<section id="evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="evaluation">4. Evaluation</h2>
+<section id="benchmark-results" class="level3">
+<h3 class="anchored" data-anchor-id="benchmark-results">Benchmark Results</h3>
+<p>To strictly evaluate the legal reasoning and retrieval capabilities of the model, I utilized two established benchmarks: <a href="https://github.com/hazyresearch/legalbench">LegalBench-RAG</a>, <a href="https://arxiv.org/abs/2306.16092">RAGBench</a>, and my own custom dataset. I chose these because they specifically target the weaknesses of legal LLMs: the ability to reason over specific documents and the frequency of hallucinations.</p>
+<p>The LegalBench-RAG, RAGBench, and my custom test split were all evaluated using <strong>meta-llama/Llama-3.1-8B</strong> as judge for seven different metrics:</p>
+<ul>
+<li><strong>Context Relevance</strong>: Measures the proportion of retrieved information that is actually pertinent to the user’s query.</li>
+<li><strong>Context Recall</strong>: Assesses if the retrieved context contains all the necessary ground-truth information required to answer.</li>
+<li><strong>Chunk Relevance</strong>: Evaluates the precision of individual retrieved document segments relative to the input query.</li>
+<li><strong>Faithfulness</strong>: Checks if the generated answer is factually derived solely from the retrieved context (hallucination detection).</li>
+<li><strong>Answer Relevance</strong>: Determines how well the generated response directly addresses the user’s original prompt.</li>
+<li><strong>Answer Correctness</strong>: Scores the accuracy of the generated answer against a known gold-standard reference.</li>
+<li><strong>Answer Completeness</strong>: Checks if the response addresses all parts of the query without omitting key details.</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 6%">
+<col style="width: 11%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 21%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 8%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;"><strong>Benchmark</strong></th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;"><strong>LegalBench-RAG</strong></th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;"><strong>Charlottesville Municipal Code</strong></th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;"><strong>RAGBench</strong></th>
+<th style="text-align: center;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>Model</strong></td>
+<td style="text-align: center;"><strong>Qwen</strong></td>
+<td style="text-align: center;"><strong>Llama</strong></td>
+<td style="text-align: center;"><strong>Mistral</strong></td>
+<td style="text-align: center;"><strong>Qwen</strong></td>
+<td style="text-align: center;"><strong>Llama</strong></td>
+<td style="text-align: center;"><strong>Mistral</strong></td>
+<td style="text-align: center;"><strong>Qwen</strong></td>
+<td style="text-align: center;"><strong>Llama</strong></td>
+<td style="text-align: center;"><strong>Mistral</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>Context Relevance</strong></td>
+<td style="text-align: center;">87.14</td>
+<td style="text-align: center;"><strong>87.27</strong></td>
+<td style="text-align: center;">87.23</td>
+<td style="text-align: center;">84.54</td>
+<td style="text-align: center;"><strong>84.65</strong></td>
+<td style="text-align: center;">84.54</td>
+<td style="text-align: center;"><strong>22.47</strong></td>
+<td style="text-align: center;">22.14</td>
+<td style="text-align: center;">22.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>Context Recall</strong></td>
+<td style="text-align: center;"><strong>72.31</strong></td>
+<td style="text-align: center;">71.85</td>
+<td style="text-align: center;">71.92</td>
+<td style="text-align: center;">42.74</td>
+<td style="text-align: center;"><strong>43.23</strong></td>
+<td style="text-align: center;">42.65</td>
+<td style="text-align: center;">20.43</td>
+<td style="text-align: center;">20.63</td>
+<td style="text-align: center;"><strong>20.79</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>Chunk Relevance</strong></td>
+<td style="text-align: center;">85.62</td>
+<td style="text-align: center;"><strong>85.72</strong></td>
+<td style="text-align: center;">85.68</td>
+<td style="text-align: center;">75.57</td>
+<td style="text-align: center;">75.47</td>
+<td style="text-align: center;"><strong>75.60</strong></td>
+<td style="text-align: center;"><strong>24.39</strong></td>
+<td style="text-align: center;">24.00</td>
+<td style="text-align: center;">24.31</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>Faithfullness</strong></td>
+<td style="text-align: center;"><strong>87.11</strong></td>
+<td style="text-align: center;">81.50</td>
+<td style="text-align: center;">84.71</td>
+<td style="text-align: center;"><strong>83.65</strong></td>
+<td style="text-align: center;">81.88</td>
+<td style="text-align: center;">82.99</td>
+<td style="text-align: center;"><strong>83.78</strong></td>
+<td style="text-align: center;">80.73</td>
+<td style="text-align: center;">79.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>Answer Relevance</strong></td>
+<td style="text-align: center;"><strong>92.17</strong></td>
+<td style="text-align: center;">88.80</td>
+<td style="text-align: center;">91.31</td>
+<td style="text-align: center;"><strong>88.88</strong></td>
+<td style="text-align: center;">87.33</td>
+<td style="text-align: center;">87.70</td>
+<td style="text-align: center;"><strong>86.42</strong></td>
+<td style="text-align: center;">79.37</td>
+<td style="text-align: center;">85.31</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>Answer Correctness</strong></td>
+<td style="text-align: center;"><strong>71.15</strong></td>
+<td style="text-align: center;">67.94</td>
+<td style="text-align: center;">56.24</td>
+<td style="text-align: center;">60.73</td>
+<td style="text-align: center;"><strong>60.79</strong></td>
+<td style="text-align: center;">60.40</td>
+<td style="text-align: center;"><strong>25.09</strong></td>
+<td style="text-align: center;">16.78</td>
+<td style="text-align: center;">20.86</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>Answer Completeness</strong></td>
+<td style="text-align: center;"><strong>89.99</strong></td>
+<td style="text-align: center;">87.22</td>
+<td style="text-align: center;">88.70</td>
+<td style="text-align: center;"><strong>86.88</strong></td>
+<td style="text-align: center;">83.54</td>
+<td style="text-align: center;">83.12</td>
+<td style="text-align: center;"><strong>85.64</strong></td>
+<td style="text-align: center;">80.84</td>
+<td style="text-align: center;">82.69</td>
+</tr>
+</tbody>
+</table>
+<p>I compared my primary model (Qwen2.5-7B-Instruct) against <strong>Mistral-7B-Instruct-v0.3</strong> and <strong>Llama-3.1-8B-Instruct</strong>, two similarly sized instruction tuned generation models. The results in the table above show that all models performed comparatively in the context retrieval tasks, which is expected since they all used the same embedding model, Qwen3-Embedding-0.6B. However, Qwen2.5-7B-Instruct wins in almost every generation-based metric. The 7B Qwen model shows remarkably better resistance to hallucination and ability to answer with more relevance, accuracy and completeness.</p>
+</section>
+</section>
+<section id="usage-and-intended-uses" class="level2">
+<h2 class="anchored" data-anchor-id="usage-and-intended-uses">5. Usage and Intended Uses</h2>
+<p>The intended use case for this model is to assist residents of Charlottesville, VA, in understanding local ordinances regarding zoning, parking, and noise complaints without needing a legal background. It is <strong>not</strong> a replacement for a lawyer but rather a tool for accessibility.</p>
+<p>Below is an example of how the RAG pipeline class is constructed and used to generate responses with retrieval.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer, AutoModelForCausalLM, pipeline, AutoModel</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> faiss <span class="im">as</span> fai</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_community.vectorstores <span class="im">import</span>  FAISS</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyRAGPipeline:</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, model_name: <span class="bu">str</span>, embedding_model_name: <span class="bu">str</span>, vector_db_path: <span class="bu">str</span>):</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.embedding_model_name <span class="op">=</span> embedding_model_name</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.max_new_tokens <span class="op">=</span> <span class="dv">500</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Loading Model: </span><span class="sc">{</span>model_name<span class="sc">}</span><span class="ss">..."</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.tokenizer <span class="op">=</span> AutoTokenizer.from_pretrained(model_name, token<span class="op">=</span>HF_TOKEN)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># --- CRITICAL: Load to CPU first ---</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ZeroGPU does not have a GPU available during global startup.</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We load the weights into System RAM now, and move them to GPU later.</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model <span class="op">=</span> AutoModelForCausalLM.from_pretrained(</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>            model_name, </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            device_map<span class="op">=</span><span class="st">"cpu"</span>,  <span class="co"># Force CPU loading</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            torch_dtype<span class="op">=</span>torch.bfloat16, </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            token<span class="op">=</span>HF_TOKEN</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.tokenizer.pad_token_id <span class="op">=</span> <span class="va">self</span>.tokenizer.eos_token_id</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.tokenizer.padding_side <span class="op">=</span> <span class="st">"left"</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Loading Embeddings..."</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.embedding_model <span class="op">=</span> HuggingFaceEmbeddings(</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>            model_name<span class="op">=</span><span class="va">self</span>.embedding_model_name,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>            model_kwargs<span class="op">=</span>{<span class="st">"device"</span>: <span class="st">"cpu"</span>}, <span class="co"># Keep embeddings on CPU</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            encode_kwargs<span class="op">=</span>{<span class="st">"normalize_embeddings"</span>: <span class="va">True</span>},</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        )     </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Loading Vector DB from </span><span class="sc">{</span>vector_db_path<span class="sc">}</span><span class="ss">..."</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> os.path.exists(vector_db_path):</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>             <span class="cf">raise</span> <span class="pp">FileNotFoundError</span>(<span class="ss">f"Could not find vector DB at </span><span class="sc">{</span>vector_db_path<span class="sc">}</span><span class="ss">. Please upload your 'index' folder."</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>             </span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.vector_db <span class="op">=</span> FAISS.load_local(vector_db_path, <span class="va">self</span>.embedding_model, allow_dangerous_deserialization<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"RAG Pipeline Initialized (CPU Mode)"</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> retrieve(<span class="va">self</span>, query, num_docs<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.vector_db.similarity_search(query, k<span class="op">=</span>num_docs)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _format_prompt(<span class="va">self</span>, query, retrieved_docs):</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 1. Build Context</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        context <span class="op">=</span> <span class="st">"Extracted documents:</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> doc <span class="kw">in</span> retrieved_docs:</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>            section <span class="op">=</span> doc.metadata.get(<span class="st">'Section'</span>, <span class="st">'N/A'</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>            subtitle <span class="op">=</span> doc.metadata.get(<span class="st">'Subtitle'</span>, <span class="st">'Context'</span>)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>            context <span class="op">+=</span> <span class="ss">f"</span><span class="sc">{</span>section<span class="sc">}</span><span class="ss"> - </span><span class="sc">{</span>subtitle<span class="sc">}</span><span class="ss">:::</span><span class="ch">\n</span><span class="sc">{</span>doc<span class="sc">.</span>page_content<span class="sc">}</span><span class="ch">\n\n</span><span class="ss">"</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 2. Universal Chat Template (Works for Qwen, Llama, Mistral, etc.)</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>        messages <span class="op">=</span> [</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>                <span class="st">"role"</span>: <span class="st">"system"</span>,</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>                <span class="st">"content"</span>: <span class="ss">f"You are a helpful legal interpreter. Use the following context to answer the user's question.</span><span class="ch">\n</span><span class="ss">Context:</span><span class="ch">\n</span><span class="sc">{</span>context<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>                <span class="st">"role"</span>: <span class="st">"system"</span>,</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>                <span class="st">"content"</span>: <span class="st">"Using the information contained in the context, give a comprehensive answer to the question. Respond only to the question asked. Your response should be concise and relevant to the question. Always provide the section number and title of the source document. Also please use plain English when responding, not legal jargon. </span><span class="ch">\n</span><span class="st"> Now answer the following question."</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>                <span class="st">"role"</span>: <span class="st">"user"</span>,</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>                <span class="st">"content"</span>: query</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>        <span class="co"># This applies the correct format for WHATEVER model you are using</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>        prompt <span class="op">=</span> <span class="va">self</span>.tokenizer.apply_chat_template(</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>            messages, </span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>            tokenize<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>            add_generation_prompt<span class="op">=</span><span class="va">True</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> prompt</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> generate(<span class="va">self</span>, query, num_docs<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 1. Retrieve</span></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>        retrieved_docs <span class="op">=</span> <span class="va">self</span>.retrieve(query, num_docs)</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 2. Format Prompt</span></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>        prompt_str <span class="op">=</span> <span class="va">self</span>._format_prompt(query, retrieved_docs)</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 3. Tokenize</span></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>        inputs <span class="op">=</span> <span class="va">self</span>.tokenizer(prompt_str, return_tensors<span class="op">=</span><span class="st">"pt"</span>).to(<span class="va">self</span>.model.device)</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 4. Generate (Streaming is simpler for direct model usage, but here we do blocking)</span></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>            outputs <span class="op">=</span> <span class="va">self</span>.model.generate(</span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>                <span class="op">**</span>inputs,</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>                max_new_tokens<span class="op">=</span><span class="va">self</span>.max_new_tokens,</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>                temperature<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>                do_sample<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>                pad_token_id<span class="op">=</span><span class="va">self</span>.tokenizer.eos_token_id</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 5. Decode</span></span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Slicing [input_len:] ensures we only return the new text, not the prompt</span></span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>        input_len <span class="op">=</span> inputs.input_ids.shape[<span class="dv">1</span>]</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>        generated_text <span class="op">=</span> <span class="va">self</span>.tokenizer.decode(outputs[<span class="dv">0</span>][input_len:], skip_special_tokens<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> generated_text</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a><span class="co"># --- INITIALIZATION ---</span></span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a><span class="co"># Using standard paths and models</span></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>MODEL_NAME <span class="op">=</span> <span class="st">"Qwen/Qwen2.5-7B-Instruct"</span></span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>EMBEDDING_NAME <span class="op">=</span> <span class="st">'Qwen/Qwen3-Embedding-0.6B'</span></span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>VECDB_PATH <span class="op">=</span> <span class="st">'index/'</span></span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>rag <span class="op">=</span> MyRAGPipeline(model_name, embedding_name, vecdb_path)</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"My neighbor is playing loud music on their porch. What time does the 'quiet period' start, and what is the maximum decibel level allowed in a residential zone?"</span></span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rag.generate(prompt))</span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="prompt-format" class="level2">
+<h2 class="anchored" data-anchor-id="prompt-format">Prompt Format</h2>
+<p>The model relies on a strict system prompt to ensure the output is simplified but factually accurate. The prompt injects the retrieved RAG context directly into the system message.</p>
+<pre><code>You are a helpful legal interpreter.
+        You are given the following context:
+        {context}\n\n
+        Using the information contained in the context,
+        give a comprehensive answer to the question.
+        Respond only to the question asked. Your response should be concise and relevant to the question.
+        Always provide the section number and title of the source document.
+        Also please use plain English when responding, not legal jargon.
+        
+        Question: {query}"</code></pre>
+</section>
+<section id="expected-output-format" class="level2">
+<h2 class="anchored" data-anchor-id="expected-output-format">Expected Output Format</h2>
+<p>The model is expected to output a plain-English translation of the input text, simplifying sentence structure while retaining critical entities (dates, fines, locations).</p>
+<pre><code>According to document &lt;Section number&gt;, the Clerk of the Council is responsible for keeping the city's official seal. 
+They must stamp this seal on any papers or documents when the Council's laws 
+or decisions require it.</code></pre>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<p>The primary limitation of this model is that while it reduces hallucinations, it does not eliminate them; users should verify important legal details with the official <a href="https://library.municode.com/va/charlottesville/codes/code_of_ordinances">Municode</a> source. Additionally, the model is strictly limited to the Charlottesville context; applying it to Albemarle County or other jurisdictions will result in incorrect information. Finally, because the model was not fine-tuned, it may occasionally slip back into dense terminology if the retrieved ordinance is exceptionally complex.</p>
 
 
 </section>
