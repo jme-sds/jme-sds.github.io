@@ -10,9 +10,9 @@ about:
       href: http://linkedin.com/in/michael-epperson-b5177a175
     - icon: github
       text: GitHub
-      href: https://www.google.com/search?q=https://github.com/jme-sds
+      href: https://github.com/jme-sds
     - text: 🤗 Hugging Face
-      href: https://www.google.com/search?q=https://huggingface.co/jme-datasci
+      href: https://huggingface.co/jme-datasci
     - icon: envelope
       text: Email
       href: mailto:michael.epperson@outlook.com
