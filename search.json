@@ -4,7 +4,14 @@
     "href": "about.html",
     "title": "About Me",
     "section": "",
-    "text": "Hello, I’m John Michael Epperson\nI am a Data Scientist and Physicist based in Charlottesville, VA. My work sits at the intersection of rigorous statistical modeling and modern deep learning. Currently, I am pursuing my M.S. in Data Science at the University of Virginia, where I focus on building AI systems that are not just theoretically interesting, but practically useful. ## What I Do\nI specialize in Deep Learning, Generative AI, and Computer Vision. My background in Physics has instilled in me a “first-principles” approach to data—I don’t just run models; I try to understand the underlying mechanics of the system I am studying.\nMy professional background includes designing automated ETL pipelines, building custom R libraries for industrial testing, and managing data quality in highly regulated environments. I enjoy the challenge of taking messy, real-world data and architecting the databases and workflows required to turn it into insight."
+    "text": "Hello, I’m John Michael Epperson\nI am a Data Scientist and Physicist based in Charlottesville, VA. My work sits at the intersection of rigorous statistical modeling and modern deep learning. Currently, I am pursuing my M.S. in Data Science at the University of Virginia, where I focus on building AI systems that are not just theoretically interesting, but practically useful."
+  },
+  {
+    "objectID": "about.html#what-i-do",
+    "href": "about.html#what-i-do",
+    "title": "About Me",
+    "section": "What I Do",
+    "text": "What I Do\nI specialize in Deep Learning, Generative AI, and Computer Vision. My background in Physics has instilled in me a “first-principles” approach to data—I don’t just run models; I try to understand the underlying mechanics of the system I am studying.\nMy professional background includes designing automated ETL pipelines, building custom R libraries for industrial testing, and managing data quality in highly regulated environments. I enjoy the challenge of taking messy, real-world data and architecting the databases and workflows required to turn it into insight."
   },
   {
     "objectID": "about.html#featured-projects",
@@ -18,7 +25,7 @@
     "href": "about.html#the-analog-the-digital",
     "title": "About Me",
     "section": "The Analog & The Digital",
-    "text": "The Analog & The Digital\nWhen I step away from the GPU, I tend to go to one of two extremes: purely analog or deeply networked.\n\nFilm Photography I shoot on a Minolta SRT 101, primarily using Kodak Gold 200. There is something satisfying about the mechanical nature of the camera and the patience required by film—it’s a refreshing contrast to the instant feedback of model training.\n\n\nHome Lab & Self-Hosting\nI am an avid self-hoster and network tinkerer, managing a distributed fleet of hardware to ensure data sovereignty and network security:\n\nThe Server (Repurposed Laptop): My primary node running Docker containers for Nextcloud (private cloud storage) and Pi-hole (network-wide ad/tracker blocking).\nRaspberry Pi 3B: Dedicated to BirdNET-Pi, an acoustic monitoring station that uses machine learning to identify and log local bird species.\nOrange Pi 3 Zero: Configured as a dedicated hotspot bridge. It creates a Wi-Fi access point that routes traffic from connected edge devices (which cannot install Tailscale natively) directly through my secure tailnet.\nNetworking: I utilize Tailscale to knit these devices together, allowing secure remote access without exposing ports to the public internet."
+    "text": "The Analog & The Digital\nWhen I step away from the GPU, I tend to go to one of two extremes: purely analog or deeply networked.\n\nFilm Photography\nI shoot on a Minolta SRT 101, primarily using Kodak Gold 200. There is something satisfying about the mechanical nature of the camera and the patience required by film—it’s a refreshing contrast to the instant feedback of model training.\n\n\nHome Lab & Self-Hosting\nI am an avid self-hoster and network tinkerer, managing a distributed fleet of hardware to ensure data sovereignty and network security:\n\nThe Server (Repurposed Laptop): My primary node running Docker containers for Nextcloud (private cloud storage) and Pi-hole (network-wide ad/tracker blocking).\nRaspberry Pi 3B: Dedicated to BirdNET-Pi, an acoustic monitoring station that uses machine learning to identify and log local bird species.\nOrange Pi 3 Zero: Configured as a dedicated hotspot bridge. It creates a Wi-Fi access point that routes traffic from connected edge devices (which cannot install Tailscale natively) directly through my secure tailnet.\nNetworking: I utilize Tailscale to knit these devices together, allowing secure remote access without exposing ports to the public internet."
   },
   {
     "objectID": "cville_rag.html",
